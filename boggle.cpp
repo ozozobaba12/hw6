@@ -93,7 +93,32 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 
 bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
 								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
-{
-//add your solution here!
 
+{
+  //check if out of bounds
+    if (r >= board.size() || c >= board.size()) {
+        return false;
+    }
+       
+   std::string newWord = word + board[r][c];
+     bool realWord = (dict.find(newWord) != dict.end());
+     bool canBeLonger = (prefix.find(newWord) != prefix.end());
+
+    if (!canBeLonger) {
+        if (realWord) {
+            result.insert(newWord);
+            return true;
+        }
+        return false;
+    }
+
+    bool foundLonger = boggleHelper(dict, prefix, board,newWord, result, r + dr, c + dc, dr, dc);
+
+    if (!foundLonger && realWord) {
+        result.insert(newWord);
+        return true;
+    }
+
+    return foundLonger;
 }
+
